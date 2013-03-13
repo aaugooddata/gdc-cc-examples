@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Graph author="root" created="Fri Mar 01 16:46:32 CET 2013" guiVersion="3.3.2" id="1362748348824" licenseType="Commercial" modified="Wed Mar 13 11:11:03 CET 2013" modifiedBy="root" name="download_gs" revision="1.64" showComponentDetails="true">
+<Graph author="root" created="Fri Mar 01 16:46:32 CET 2013" guiVersion="3.3.2" id="1362748348824" licenseType="Commercial" modified="Wed Mar 13 15:12:18 CET 2013" modifiedBy="root" name="download_gs" revision="1.66" showComponentDetails="true">
 <Global>
 <Metadata id="gdCustomProperties">
 <Record fieldDelimiter="\n" name="gdCustomProperties" recordSize="-1" type="delimited">
@@ -43,11 +43,12 @@
 <Field eofAsDelimiter="false" name="response" nullable="true" shift="0" size="0" type="string"/>
 </Record>
 </Metadata>
-<Property id="GraphParameter12" name="access_code" value="4/m9z4X-IfreVz3Xf4E4I9awSKjbZe.YjU9PQYvt-AVOl05ti8ZT3YJiHnGegI"/>
-<Property id="GraphParameter11" name="client_id" value="910882032438-7fgtblbkikndine1d5bbrbedclvd2am5.apps.googleusercontent.com"/>
-<Property id="GraphParameter10" name="client_secret" value="CUcZUFtg9SHIFH_swzb0AGcr"/>
-<Property id="GraphParameter13" name="redirect_uri" value="http://www.gooddata.com/"/>
-<Property fileURL="workspace.prm" id="GraphParameter0"/>
+<Property id="GraphParameter0" name="access_code" value="4/m9z4X-IfreVz3Xf4E4I9awSKjbZe.YjU9PQYvt-AVOl05ti8ZT3YJiHnGegI"/>
+<Property id="GraphParameter1" name="client_id" value="910882032438-7fgtblbkikndine1d5bbrbedclvd2am5.apps.googleusercontent.com"/>
+<Property id="GraphParameter2" name="client_secret" value=""/>
+<Property id="GraphParameter15" name="key" value=""/>
+<Property id="GraphParameter3" name="redirect_uri" value="http://www.gooddata.com/"/>
+<Property fileURL="workspace.prm" id="GraphParameter4"/>
 <LookupTable id="LookupTable0" metadata="gdCustomProperties" name="gd_lookup" type="gdLookup"/>
 <Dictionary/>
 </Global>
@@ -257,7 +258,7 @@ function integer generate() {
 
 // Transforms input record into output record.
 function integer transform() {
-	$out.0.URL = "https://spreadsheets.google.com/feeds/download/spreadsheets/Export?key=0AltSiuRqs6vCdFNMY3pWYmhSak5rY3BKN2VmeVVIUEE&exportFormat=csv&access_token=" + $in.0.access_token;
+	$out.0.URL = "https://spreadsheets.google.com/feeds/download/spreadsheets/Export?key=${key}&exportFormat=csv&access_token=" + $in.0.access_token;
 	return ALL;
 }
 
