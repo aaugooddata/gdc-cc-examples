@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="root" created="Fri Mar 01 16:46:32 CET 2013" guiVersion="3.3.2" id="1362748348824" licenseType="Commercial" modified="Wed Mar 13 11:11:03 CET 2013" modifiedBy="root" name="download_gs" revision="1.64" showComponentDetails="true">
+<Global>
+<Metadata id="gdCustomProperties">
+<Record fieldDelimiter="\n" name="gdCustomProperties" recordSize="-1" type="delimited">
+<Field delimiter="," eofAsDelimiter="false" name="key" nullable="true" shift="0" type="string"/>
+<Field delimiter="," eofAsDelimiter="false" name="value" nullable="true" shift="0" type="string"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata4">
+<Record fieldDelimiter="|" name="I_access_token" recordDelimiter="\n" type="delimited">
+<Field name="access_token" type="string"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata0" previewAttachmentCharset="ISO-8859-1">
+<Record fieldDelimiter="," name="I_login" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\n" type="delimited">
+<Field name="refresh_token" type="string"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata3">
+<Record fieldDelimiter="," name="IO_lookup" recordDelimiter="\n" type="delimited">
+<Field name="key" type="string"/>
+<Field name="value" type="string"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata5" previewAttachmentCharset="ISO-8859-1">
+<Record fieldDelimiter="," name="O_data" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\n" skipSourceRows="1" type="delimited">
+<Field name="Id" type="string"/>
+<Field name="FirstName" type="string"/>
+<Field name="LastName" type="string"/>
+<Field name="Number" type="string"/>
+<Field name="City" type="string"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata2">
+<Record fieldDelimiter="," name="O_login" recordDelimiter="\n" type="delimited">
+<Field name="access_token" type="string"/>
+<Field name="refresh_token" type="string"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata1" previewAttachmentCharset="ISO-8859-1">
+<Record fieldDelimiter="," name="O_response" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\n" recordSize="-1" type="delimited">
+<Field eofAsDelimiter="false" name="response" nullable="true" shift="0" size="0" type="string"/>
+</Record>
+</Metadata>
+<Property id="GraphParameter12" name="access_code" value="4/m9z4X-IfreVz3Xf4E4I9awSKjbZe.YjU9PQYvt-AVOl05ti8ZT3YJiHnGegI"/>
+<Property id="GraphParameter11" name="client_id" value="910882032438-7fgtblbkikndine1d5bbrbedclvd2am5.apps.googleusercontent.com"/>
+<Property id="GraphParameter10" name="client_secret" value="CUcZUFtg9SHIFH_swzb0AGcr"/>
+<Property id="GraphParameter13" name="redirect_uri" value="http://www.gooddata.com/"/>
+<Property fileURL="workspace.prm" id="GraphParameter0"/>
+<LookupTable id="LookupTable0" metadata="gdCustomProperties" name="gd_lookup" type="gdLookup"/>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node enabled="enabled" guiHeight="73" guiName="DataGenerator" guiWidth="134" guiX="37" guiY="141" id="DATA_GENERATOR0" recordsNumber="1" type="DATA_GENERATOR">
+<attr name="generate"><![CDATA[//#CTL2
+
+// Generates output record.
+function integer generate() {
+	$out.0.refresh_token = lookup(gd_lookup).get("REFRESH_TOKEN").value;
+	return ALL;
+}
+
+
+// Called during component initialization.
+// function boolean init() {}
+
+// Called during each graph run before the transform is executed. May be used to allocate and initialize resources
+// required by the generate. All resources allocated within this method should be released
+// by the postExecute() method.
+// function void preExecute() {}
+
+// Called only if generate() throws an exception.
+// function integer generateOnError(string errorMessage, string stackTrace) {
+// }
+
+// Called during each graph run after the entire transform was executed. Should be used to free any resources
+// allocated within the preExecute() method.
+// function void postExecute() {}
+
+// Called to return a user-defined error message when an error occurs.
+// function string getMessage() {}
+]]></attr>
+</Node>
+<Node addInputFieldsAsParameters="false" enabled="enabled" guiHeight="73" guiName="HTTP connector" guiWidth="144" guiX="247" guiY="141" headerProperties="Content-Type=application/x-www-form-urlencoded&#10;" id="HTTP_CONNECTOR0" requestMethod="POST" type="HTTP_CONNECTOR">
+<attr name="inputMapping"><![CDATA[//#CTL2
+
+// Transforms input record into output record.
+function integer transform() {
+	$out.0.URL = "https://accounts.google.com/o/oauth2/token";
+
+	
+	if ($in.0.refresh_token != ""){
+		$out.0.requestContent = "client_id=${client_id}&client_secret=${client_secret}&refresh_token=" + $in.0.refresh_token + "&grant_type=refresh_token";
+	}else{
+		$out.0.requestContent = "code=${access_code}&client_id=${client_id}&client_secret=${client_secret}&redirect_uri=" + escapeUrl("${redirect_uri}") + "&grant_type=authorization_code";
+	}
+	return ALL;
+}
+
+// Called during component initialization.
+// function boolean init() {}
+
+// Called during each graph run before the transform is executed. May be used to allocate and initialize resources
+// required by the transform. All resources allocated within this method should be released
+// by the postExecute() method.
+// function void preExecute() {}
+
+// Called only if transform() throws an exception.
+// function integer transformOnError(string errorMessage, string stackTrace) {}
+
+// Called during each graph run after the entire transform was executed. Should be used to free any resources
+// allocated within the preExecute() method.
+// function void postExecute() {}
+
+// Called to return a user-defined error message when an error occurs.
+// function string getMessage() {}
+]]></attr>
+<attr name="standardOutputMapping"><![CDATA[//#CTL2
+
+// Transforms input record into output record.
+function integer transform() {
+	$out.0.response = $in.1.content;
+	return ALL;
+}
+
+// Called during component initialization.
+// function boolean init() {}
+
+// Called during each graph run before the transform is executed. May be used to allocate and initialize resources
+// required by the transform. All resources allocated within this method should be released
+// by the postExecute() method.
+// function void preExecute() {}
+
+// Called only if transform() throws an exception.
+// function integer transformOnError(string errorMessage, string stackTrace) {}
+
+// Called during each graph run after the entire transform was executed. Should be used to free any resources
+// allocated within the preExecute() method.
+// function void postExecute() {}
+
+// Called to return a user-defined error message when an error occurs.
+// function string getMessage() {}
+]]></attr>
+</Node>
+<Edge fromNode="DATA_GENERATOR0:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (out)" toNode="HTTP_CONNECTOR0:0"/>
+<Edge debugMode="true" fromNode="HTTP_CONNECTOR0:0" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (in)" metadata="Metadata1" outPort="Port 0 (out)" toNode="JSON_READER0:0"/>
+</Phase>
+<Phase number="1">
+<Node charset="UTF-8" enabled="enabled" fileURL="port:$0.response:discrete" guiHeight="111" guiName="JSONReader" guiWidth="128" guiX="482" guiY="139" id="JSON_READER0" type="JSON_READER">
+<attr name="mapping"><![CDATA[<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Context xpath="/root/object" outPort="0">
+  <Mapping cloverField="access_token" xpath="access_x005ftoken"/>
+  <Mapping cloverField="refresh_token" xpath="refresh_x005ftoken"/>
+</Context>
+]]></attr>
+</Node>
+<Node enabled="enabled" guiHeight="73" guiName="LookupTableReaderWriter" guiWidth="216" guiX="893" guiY="141" id="LOOKUP_TABLE_READER_WRITER0" lookupTable="LookupTable0" type="LOOKUP_TABLE_READER_WRITER"/>
+<Node enabled="enabled" guiHeight="73" guiName="Normalizer" guiWidth="128" guiX="700" guiY="141" id="NORMALIZER0" type="NORMALIZER">
+<attr name="normalize"><![CDATA[//#CTL2
+// This transformation defines the way in which a single input record is normalized
+// into multiple output records.
+
+// This function is called for all input records.
+// It parses each single input record and returns the number of records
+// that should be created from such input record.
+function integer count() {
+	if (!isnull($in.0.refresh_token) and $in.0.refresh_token != "") {
+		return 2;
+	}else if (!isnull($in.0.access_token) and $in.0.access_token != ""){
+		return 1;
+	}else{
+		raiseError("Google login was not successfull.");
+	}
+}
+
+// This function creates new records for the output, based on single input record
+// that has been parsed by the count() function.
+// It is called count() times for each input record.
+// The idx argument specifies which output record is being created,
+// its values range is from 0 to count() - 1.
+function integer transform(integer idx) {
+	if (idx == 0) {
+		$out.0.key = "ACCESS_TOKEN";
+		$out.0.value = $in.0.access_token;
+	}else if (idx == 1 ){
+		$out.0.key = "REFRESH_TOKEN";
+		$out.0.value = $in.0.refresh_token;
+	}
+	return OK;
+}
+
+// Called during component initialization.
+// function boolean init() {}
+
+// Called during each graph run before the transform is executed. May be used to allocate and initialize resources
+// required by the transform. All resources allocated within this method should be released
+// by the postExecute() method.
+// function void preExecute() {}
+
+// Called only if count() throws an exception.
+// function integer countOnError(string errorMessage, string stackTrace) {
+//}
+
+// Called only if transform() throws an exception.
+// function integer transformOnError(string errorMessage, string stackTrace, integer idx) {
+// }
+
+// Called after transform(count-1) to return the resources that have been used to their initial state
+// so that next input record may be parsed.
+// function void clean() {}
+
+// Called during each graph run after the entire transform was executed. Should be used to free any resources
+// allocated within the preExecute() method.
+// function void postExecute() {}
+
+// Called to return a user-defined error message when an error occurs.
+// function string getMessage() {}
+]]></attr>
+</Node>
+<Edge debugMode="true" fromNode="JSON_READER0:0" guiBendpoints="" guiRouter="Manhattan" id="Edge2" inPort="Port 0 (in)" metadata="Metadata2" outPort="Port 0 (out)" toNode="NORMALIZER0:0"/>
+<Edge debugMode="true" fromNode="NORMALIZER0:0" guiBendpoints="" guiRouter="Manhattan" id="Edge3" inPort="Port 0 (in)" metadata="Metadata3" outPort="Port 0 (out)" toNode="LOOKUP_TABLE_READER_WRITER0:0"/>
+</Phase>
+<Phase number="2">
+<Node enabled="enabled" guiHeight="73" guiName="DataGenerator" guiWidth="134" guiX="37" guiY="276" id="DATA_GENERATOR2" recordsNumber="1" type="DATA_GENERATOR">
+<attr name="generate"><![CDATA[//#CTL2
+
+// Generates output record.
+function integer generate() {
+	$out.0.access_token = lookup(gd_lookup).get("ACCESS_TOKEN").value;
+	return ALL;
+}
+
+// Called during component initialization.
+// function boolean init() {}
+
+// Called during each graph run before the transform is executed. May be used to allocate and initialize resources
+// required by the generate. All resources allocated within this method should be released
+// by the postExecute() method.
+// function void preExecute() {}
+
+// Called only if generate() throws an exception.
+// function integer generateOnError(string errorMessage, string stackTrace) {
+// }
+
+// Called during each graph run after the entire transform was executed. Should be used to free any resources
+// allocated within the preExecute() method.
+// function void postExecute() {}
+
+// Called to return a user-defined error message when an error occurs.
+// function string getMessage() {}
+]]></attr>
+</Node>
+<Node enabled="enabled" fileURL="port:$0.response:discrete" guiHeight="111" guiName="CSV Reader" guiWidth="128" guiX="482" guiY="276" id="DATA_READER0" trim="true" type="DATA_READER"/>
+<Node enabled="enabled" guiHeight="73" guiName="HTTP connector" guiWidth="144" guiX="254" guiY="276" id="HTTP_CONNECTOR2" requestMethod="GET" type="HTTP_CONNECTOR">
+<attr name="inputMapping"><![CDATA[//#CTL2
+
+// Transforms input record into output record.
+function integer transform() {
+	$out.0.URL = "https://spreadsheets.google.com/feeds/download/spreadsheets/Export?key=0AltSiuRqs6vCdFNMY3pWYmhSak5rY3BKN2VmeVVIUEE&exportFormat=csv&access_token=" + $in.0.access_token;
+	return ALL;
+}
+
+// Called during component initialization.
+// function boolean init() {}
+
+// Called during each graph run before the transform is executed. May be used to allocate and initialize resources
+// required by the transform. All resources allocated within this method should be released
+// by the postExecute() method.
+// function void preExecute() {}
+
+// Called only if transform() throws an exception.
+// function integer transformOnError(string errorMessage, string stackTrace) {}
+
+// Called during each graph run after the entire transform was executed. Should be used to free any resources
+// allocated within the preExecute() method.
+// function void postExecute() {}
+
+// Called to return a user-defined error message when an error occurs.
+// function string getMessage() {}
+]]></attr>
+<attr name="standardOutputMapping"><![CDATA[//#CTL2
+
+// Transforms input record into output record.
+function integer transform() {
+	$out.0.response = $in.1.content;
+
+	return ALL;
+}
+
+// Called during component initialization.
+// function boolean init() {}
+
+// Called during each graph run before the transform is executed. May be used to allocate and initialize resources
+// required by the transform. All resources allocated within this method should be released
+// by the postExecute() method.
+// function void preExecute() {}
+
+// Called only if transform() throws an exception.
+// function integer transformOnError(string errorMessage, string stackTrace) {}
+
+// Called during each graph run after the entire transform was executed. Should be used to free any resources
+// allocated within the preExecute() method.
+// function void postExecute() {}
+
+// Called to return a user-defined error message when an error occurs.
+// function string getMessage() {}
+]]></attr>
+</Node>
+<Node debugPrint="true" enabled="enabled" guiHeight="73" guiName="Trash" guiWidth="128" guiX="700" guiY="276" id="TRASH1" type="TRASH"/>
+<Edge fromNode="DATA_GENERATOR2:0" guiBendpoints="" guiRouter="Manhattan" id="Edge6" inPort="Port 0 (in)" metadata="Metadata4" outPort="Port 0 (out)" toNode="HTTP_CONNECTOR2:0"/>
+<Edge debugMode="true" fromNode="DATA_READER0:0" guiBendpoints="" guiRouter="Manhattan" id="Edge8" inPort="Port 0 (in)" metadata="Metadata5" outPort="Port 0 (output)" toNode="TRASH1:0"/>
+<Edge debugMode="true" fromNode="HTTP_CONNECTOR2:0" guiBendpoints="" guiRouter="Manhattan" id="Edge7" inPort="Port 0 (input)" metadata="Metadata1" outPort="Port 0 (out)" toNode="DATA_READER0:0"/>
+</Phase>
+</Graph>
