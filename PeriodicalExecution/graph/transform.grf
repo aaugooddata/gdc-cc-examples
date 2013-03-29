@@ -1,0 +1,519 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="root" created="Sun Mar 24 19:40:53 CET 2013" guiVersion="3.3.2" id="1364207257461" licenseType="Commercial" modified="Fri Mar 29 12:50:31 CET 2013" modifiedBy="root" name="transform" revision="1.96" showComponentDetails="true">
+<Global>
+<Metadata id="Metadata4" previewAttachment="${DATA_SOURCE_DIR}/data_22032013.csv" previewAttachmentCharset="ISO-8859-1">
+<Record fieldDelimiter="," label="data_22032013.csv" name="data_22032013_csv" previewAttachment="${DATA_SOURCE_DIR}/data_22032013.csv" previewAttachmentCharset="ISO-8859-1" quoteChar="&quot;" quotedStrings="true" recordDelimiter="\n" skipSourceRows="1" type="delimited">
+<Field name="id" type="string"/>
+<Field eofAsDelimiter="false" name="value" type="string"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata7" previewAttachmentCharset="ISO-8859-1">
+<Record fieldDelimiter="," name="I_fileMove" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\n" type="delimited">
+<Field name="file" type="string"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata5" previewAttachment="${DATA_SOURCE_DIR}/user_23032013.csv" previewAttachmentCharset="ISO-8859-1">
+<Record fieldDelimiter="," label="user_23032013.csv" name="I_user" previewAttachment="${DATA_SOURCE_DIR}/user_23032013.csv" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\n" skipSourceRows="1" type="delimited">
+<Field name="id" type="string"/>
+<Field name="first_name" type="string"/>
+<Field eofAsDelimiter="false" name="last_name" type="string"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata6" previewAttachmentCharset="ISO-8859-1">
+<Record fieldDelimiter="," name="IO_files" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\n" type="delimited">
+<Field name="files" type="string"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata8">
+<Record fieldDelimiter="," name="IO_type" recordDelimiter="\n" type="delimited">
+<Field name="types" type="string"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata3" previewAttachmentCharset="ISO-8859-1">
+<Record fieldDelimiter="," name="O_filePath" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\n" type="delimited">
+<Field name="file" type="string"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata0" previewAttachmentCharset="ISO-8859-1">
+<Record fieldDelimiter="|" name="O_list" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\n" recordSize="-1" type="delimited">
+<Field eofAsDelimiter="false" name="name" nullable="true" shift="0" size="0" type="string"/>
+<Field eofAsDelimiter="false" format="joda:yyyy-MM-dd HH:mm:ss" name="lastModified" nullable="true" shift="0" size="0" type="date"/>
+<Field name="filePath" type="string"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata1" previewAttachmentCharset="ISO-8859-1">
+<Record fieldDelimiter="," name="O_list_type" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\n" type="delimited">
+<Field name="filename" type="string"/>
+<Field name="type" type="string"/>
+<Field name="filePath" type="string"/>
+<Field name="modified" type="date"/>
+<Field name="key" type="string"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata2">
+<Record fieldDelimiter="," name="O_lookup" recordDelimiter="\n" type="delimited">
+<Field name="key" type="string"/>
+<Field name="value" type="string"/>
+</Record>
+</Metadata>
+<Property id="GraphParameter11" name="LOADED_PATH" value="loaded/"/>
+<Property id="GraphParameter14" name="PATH" value="https://username:password@secure-di.gooddata.com/project-uploads/PID/"/>
+<Property id="GraphParameter12" name="SOURCE_PATH" value="waiting/"/>
+<Property id="GraphParameter13" name="TYPES" value="data,user"/>
+<Property fileURL="workspace.prm" id="GraphParameter0"/>
+<LookupTable id="LookupTable0" metadata="Metadata2" name="gdLookup0" type="gdLookup"/>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node enabled="enabled" guiHeight="73" guiName="All Files To Delete" guiWidth="160" guiX="734" guiY="234" id="ALL_FILES_TO_DELETE" key="key" order="Ignore" type="DENORMALIZER">
+<attr name="denormalize"><![CDATA[//#CTL2
+// This transformation defines the way in which multiple input records 
+// (with the same key) are denormalized into one output record. 
+string files;
+boolean first = true;
+
+
+
+// This function is called for each input record from a group of records
+// with the same key.
+function integer append() {
+	if (first) {
+		files = $in.0.filename;
+		first = false;
+	}else{
+		files = files + ";" + $in.0.filename;
+	}
+	return 0;
+}
+
+// This function is called once after the append() function was called for all records
+// of a group of input records defined by the key.
+// It creates a single output record for the whole group.
+function integer transform() {
+	$out.0.key = "FILES_TO_DELETE";
+	$out.0.value = files;
+	return OK;
+}
+
+// Called during component initialization.
+// function boolean init() {}
+
+// Called during each graph run before the transform is executed. May be used to allocate and initialize resources
+// required by the transform. All resources allocated within this method should be released
+// by the postExecute() method.
+// function void preExecute() {}
+
+// Called only if append() throws an exception.
+// function integer appendOnError(string errorMessage, string stackTrace) {
+// }
+
+// Called only if transform() throws an exception.
+//function integer transformOnError(string errorMessage, string stackTrace) {
+//}
+
+// Called after transform() to return the resources that have been used to their initial state
+// so that next group of records with different key may be parsed.
+// function void clean() {}
+
+// Called during each graph run after the entire transform was executed. Should be used to free any resources
+// allocated within the preExecute() method.
+// function void postExecute() {}
+
+// Called to return a user-defined error message when an error occurs.
+// function string getMessage() {}
+]]></attr>
+</Node>
+<Node enabled="enabled" guiHeight="92" guiName="ExtSort" guiWidth="128" guiX="470" guiY="115" id="EXT_SORT0" sortKey="type(a)" type="EXT_SORT"/>
+<Node baseURL="${PATH}${SOURCE_PATH}" enabled="enabled" guiHeight="73" guiName="List All Files" guiWidth="128" guiX="29" guiY="115" id="LIST_ALL_FILES" outputMapping="//#CTL2&#10;&#10;// Transforms input record into output record.&#10;function integer transform() {&#10;&#9;$out.0.name = $in.0.fileName;&#10;&#9;$out.0.lastModified = $in.0.lastModified;&#10;&#9;$out.0.filePath = $in.0.filePath;&#10;&#10;&#9;return ALL;&#10;}&#10;&#10;// Called during component initialization.&#10;// function boolean init() {}&#10;&#10;// Called during each graph run before the transform is executed. May be used to allocate and initialize resources&#10;// required by the transform. All resources allocated within this method should be released&#10;// by the postExecute() method.&#10;// function void preExecute() {}&#10;&#10;// Called only if transform() throws an exception.&#10;// function integer transformOnError(string errorMessage, string stackTrace) {}&#10;&#10;// Called during each graph run after the entire transform was executed. Should be used to free any resources&#10;// allocated within the preExecute() method.&#10;// function void postExecute() {}&#10;&#10;// Called to return a user-defined error message when an error occurs.&#10;// function string getMessage() {}&#10;" type="FILE_LIST"/>
+<Node enabled="enabled" guiHeight="73" guiName="LookupTableReaderWriter" guiWidth="216" guiX="972" guiY="115" id="LOOKUP_TABLE_READER_WRITER0" lookupTable="LookupTable0" type="LOOKUP_TABLE_READER_WRITER"/>
+<Node enabled="enabled" guiHeight="73" guiName="LookupTableReaderWriter" guiWidth="216" guiX="972" guiY="234" id="LOOKUP_TABLE_READER_WRITER1" lookupTable="LookupTable0" type="LOOKUP_TABLE_READER_WRITER"/>
+<Node enabled="enabled" guiHeight="73" guiName="Names of file to process" guiWidth="206" guiX="734" guiY="115" id="NAMES_OF_FILE_TO_PROCESS" key="type" order="Auto" type="DENORMALIZER">
+<attr name="denormalize"><![CDATA[//#CTL2
+// This transformation defines the way in which multiple input records 
+// (with the same key) are denormalized into one output record. 
+
+date[] max_dates;
+date current_max_date;
+string filename;
+string type;
+
+
+
+// This function is called for each input record from a group of records
+// with the same key.
+function integer append() {
+	
+	printLog(info,current_max_date);
+	printLog(info,$in.0.modified);
+	printLog(info,$in.0.type);
+	if ((isnull(current_max_date)) or (current_max_date < $in.0.modified)){
+		current_max_date = $in.0.modified;
+		filename = $in.0.filename;
+		type = $in.0.type;
+	}
+	return 0;
+}
+
+// This function is called once after the append() function was called for all records
+// of a group of input records defined by the key.
+// It creates a single output record for the whole group.
+function integer transform() {
+	push(max_dates,current_max_date);
+	$out.0.key = type;
+	$out.0.value = filename;
+	
+	current_max_date = null;
+	return OK;
+}
+
+// Called during component initialization.
+// function boolean init() {}
+
+// Called during each graph run before the transform is executed. May be used to allocate and initialize resources
+// required by the transform. All resources allocated within this method should be released
+// by the postExecute() method.
+// function void preExecute() {}
+
+// Called only if append() throws an exception.
+// function integer appendOnError(string errorMessage, string stackTrace) {
+// }
+
+// Called only if transform() throws an exception.
+//function integer transformOnError(string errorMessage, string stackTrace) {
+//}
+
+// Called after transform() to return the resources that have been used to their initial state
+// so that next group of records with different key may be parsed.
+// function void clean() {}
+
+// Called during each graph run after the entire transform was executed. Should be used to free any resources
+// allocated within the preExecute() method.
+function void postExecute() {
+	date temp = null;
+	foreach (date d : max_dates){
+		if (isnull(temp)){
+			temp = d;
+		}else{
+			if (temp != d){
+				printLog(error,max_dates);
+				raiseError("The is inconsistency in dates of loaded files - please fix the data");
+			}
+		}
+	
+	}
+
+}
+
+// Called to return a user-defined error message when an error occurs.
+// function string getMessage() {}
+]]></attr>
+</Node>
+<Node enabled="enabled" guiHeight="73" guiName="Parse Types" guiWidth="128" guiX="251" guiY="115" id="PARSE_TYPES" type="REFORMAT">
+<attr name="transform"><![CDATA[//#CTL2
+
+string[] types;
+
+
+// Transforms input record into output record.
+function integer transform() {
+	foreach (string type : types) {
+		if (countChar($in.0.name,type)>0){
+			$out.0.filename = $in.0.name;
+			$out.0.type = type;
+			$out.0.modified = str2date(split($in.0.name,"_")[1],"ddMMyyyy");
+			$out.0.key = "1";
+			$out.0.filePath = $in.0.filePath;
+		}		
+	}
+	return ALL;
+}
+
+// Called during component initialization.
+  function boolean init() {
+  	types = split("${TYPES}",",");
+	return true;
+  }
+
+// Called during each graph run before the transform is executed. May be used to allocate and initialize resources
+// required by the transform. All resources allocated within this method should be released
+// by the postExecute() method.
+// function void preExecute() {}
+
+// Called only if transform() throws an exception.
+// function integer transformOnError(string errorMessage, string stackTrace) {}
+
+// Called during each graph run after the entire transform was executed. Should be used to free any resources
+// allocated within the preExecute() method.
+// function void postExecute() {}
+
+// Called to return a user-defined error message when an error occurs.
+// function string getMessage() {}
+]]></attr>
+</Node>
+<Edge debugMode="true" fromNode="ALL_FILES_TO_DELETE:0" guiBendpoints="" guiRouter="Manhattan" id="Edge5" inPort="Port 0 (in)" metadata="Metadata2" outPort="Port 0 (out)" toNode="LOOKUP_TABLE_READER_WRITER1:0"/>
+<Edge fromNode="EXT_SORT0:0" guiBendpoints="" guiRouter="Manhattan" id="Edge3" inPort="Port 0 (in)" metadata="Metadata1" outPort="Port 0 (out)" toNode="NAMES_OF_FILE_TO_PROCESS:0"/>
+<Edge fromNode="EXT_SORT0:1" guiBendpoints="" guiRouter="Manhattan" id="Edge4" inPort="Port 0 (in)" metadata="Metadata1" outPort="Port 1 (out)" toNode="ALL_FILES_TO_DELETE:0"/>
+<Edge debugMode="true" fromNode="LIST_ALL_FILES:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (out)" toNode="PARSE_TYPES:0"/>
+<Edge debugMode="true" fromNode="NAMES_OF_FILE_TO_PROCESS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge2" inPort="Port 0 (in)" metadata="Metadata2" outPort="Port 0 (out)" toNode="LOOKUP_TABLE_READER_WRITER0:0"/>
+<Edge debugMode="true" fromNode="PARSE_TYPES:0" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (in)" metadata="Metadata1" outPort="Port 0 (out)" toNode="EXT_SORT0:0"/>
+</Phase>
+<Phase number="1">
+<Node enabled="enabled" fileURL="port:$0.file:source" guiHeight="111" guiName="CSV Reader" guiWidth="128" guiX="313" guiY="365" id="DATA_READER0" quoteCharacter="&quot;" quotedStrings="true" type="DATA_READER"/>
+<Node enabled="enabled" guiHeight="73" guiName="Load lates data" guiWidth="138" guiX="29" guiY="365" id="LOAD_LATES_DATA" recordsNumber="1" type="DATA_GENERATOR">
+<attr name="generate"><![CDATA[//#CTL2
+
+// Generates output record.
+function integer generate() {
+
+	string key = split("${TYPES}",",")[0];
+	string filename = lookup(gdLookup0).get(key).value;
+	if (filename != ""){
+		$out.0.file = "${PATH}${SOURCE_PATH}" + filename;
+		return ALL;
+	}else{
+		return SKIP;
+	}
+}
+
+// Called during component initialization.
+// function boolean init() {}
+
+// Called during each graph run before the transform is executed. May be used to allocate and initialize resources
+// required by the generate. All resources allocated within this method should be released
+// by the postExecute() method.
+// function void preExecute() {}
+
+// Called only if generate() throws an exception.
+// function integer generateOnError(string errorMessage, string stackTrace) {
+// }
+
+// Called during each graph run after the entire transform was executed. Should be used to free any resources
+// allocated within the preExecute() method.
+// function void postExecute() {}
+
+// Called to return a user-defined error message when an error occurs.
+// function string getMessage() {}
+]]></attr>
+</Node>
+<Node enabled="enabled" guiHeight="73" guiName="Trash" guiWidth="128" guiX="568" guiY="365" id="TRASH0" type="TRASH"/>
+<Edge debugMode="true" fromNode="DATA_READER0:0" guiBendpoints="" guiRouter="Manhattan" id="Edge7" inPort="Port 0 (in)" metadata="Metadata4" outPort="Port 0 (output)" toNode="TRASH0:0"/>
+<Edge debugMode="true" edgeType="direct" fromNode="LOAD_LATES_DATA:0" guiBendpoints="" guiRouter="Manhattan" id="Edge6" inPort="Port 0 (input)" metadata="Metadata3" outPort="Port 0 (out)" toNode="DATA_READER0:0"/>
+</Phase>
+<Phase number="2">
+<Node enabled="enabled" fileURL="port:$0.file:source" guiHeight="111" guiName="CSV Reader" guiWidth="128" guiX="313" guiY="543" id="DATA_READER1" quoteCharacter="&quot;" quotedStrings="true" type="DATA_READER"/>
+<Node enabled="enabled" guiHeight="73" guiName="Load lates user" guiWidth="138" guiX="29" guiY="543" id="LOAD_LATES_USER" recordsNumber="1" type="DATA_GENERATOR">
+<attr name="generate"><![CDATA[//#CTL2
+
+// Generates output record.
+function integer generate() {
+	string key = split("${TYPES}",",")[1];
+	string filename = lookup(gdLookup0).get(key).value;
+
+	if (filename != ""){
+		$out.0.file = "${PATH}${SOURCE_PATH}" + filename;
+		return ALL;
+	}else{
+		return SKIP;
+	}
+}
+
+// Called during component initialization.
+// function boolean init() {}
+
+// Called during each graph run before the transform is executed. May be used to allocate and initialize resources
+// required by the generate. All resources allocated within this method should be released
+// by the postExecute() method.
+// function void preExecute() {}
+
+// Called only if generate() throws an exception.
+// function integer generateOnError(string errorMessage, string stackTrace) {
+// }
+
+// Called during each graph run after the entire transform was executed. Should be used to free any resources
+// allocated within the preExecute() method.
+// function void postExecute() {}
+
+// Called to return a user-defined error message when an error occurs.
+// function string getMessage() {}
+]]></attr>
+</Node>
+<Node enabled="enabled" guiHeight="73" guiName="Trash" guiWidth="128" guiX="568" guiY="543" id="TRASH1" type="TRASH"/>
+<Edge debugMode="true" fromNode="DATA_READER1:0" guiBendpoints="" guiRouter="Manhattan" id="Edge9" inPort="Port 0 (in)" metadata="Metadata5" outPort="Port 0 (output)" toNode="TRASH1:0"/>
+<Edge debugMode="true" edgeType="direct" fromNode="LOAD_LATES_USER:0" guiBendpoints="" guiRouter="Manhattan" id="Edge8" inPort="Port 0 (input)" metadata="Metadata3" outPort="Port 0 (out)" toNode="DATA_READER1:0"/>
+</Phase>
+<Phase number="3">
+<Node enabled="enabled" guiHeight="73" guiName="DataGenerator" guiWidth="134" guiX="28" guiY="711" id="DATA_GENERATOR0" recordsNumber="1" type="DATA_GENERATOR">
+<attr name="generate"><![CDATA[//#CTL2
+
+// Generates output record.
+function integer generate() {
+	$out.0.types = randomString(3,5);
+
+	return ALL;
+}
+
+// Called during component initialization.
+// function boolean init() {}
+
+// Called during each graph run before the transform is executed. May be used to allocate and initialize resources
+// required by the generate. All resources allocated within this method should be released
+// by the postExecute() method.
+// function void preExecute() {}
+
+// Called only if generate() throws an exception.
+// function integer generateOnError(string errorMessage, string stackTrace) {
+// }
+
+// Called during each graph run after the entire transform was executed. Should be used to free any resources
+// allocated within the preExecute() method.
+// function void postExecute() {}
+
+// Called to return a user-defined error message when an error occurs.
+// function string getMessage() {}
+]]></attr>
+</Node>
+<Node enabled="enabled" guiHeight="73" guiName="LookupTableReaderWriter" guiWidth="216" guiX="568" guiY="711" id="LOOKUP_TABLE_READER_WRITER2" lookupTable="LookupTable0" type="LOOKUP_TABLE_READER_WRITER"/>
+<Node enabled="enabled" guiHeight="73" guiName="Reseting lookup values" guiWidth="195" guiX="313" guiY="711" id="RESETING_LOOKUP_VALUES" type="NORMALIZER">
+<attr name="normalize"><![CDATA[//#CTL2
+// This transformation defines the way in which a single input record is normalized
+// into multiple output records.
+string[] types;
+
+// This function is called for all input records.
+// It parses each single input record and returns the number of records
+// that should be created from such input record.
+function integer count() {
+	types = split("${TYPES}",",");
+	return types.length();
+}
+
+// This function creates new records for the output, based on single input record
+// that has been parsed by the count() function.
+// It is called count() times for each input record.
+// The idx argument specifies which output record is being created,
+// its values range is from 0 to count() - 1.
+function integer transform(integer idx) {
+	$out.0.key = types[idx];
+	$out.0.value = "";
+	return OK;
+}
+
+// Called during component initialization.
+// function boolean init() {}
+
+// Called during each graph run before the transform is executed. May be used to allocate and initialize resources
+// required by the transform. All resources allocated within this method should be released
+// by the postExecute() method.
+// function void preExecute() {}
+
+// Called only if count() throws an exception.
+// function integer countOnError(string errorMessage, string stackTrace) {
+//}
+
+// Called only if transform() throws an exception.
+// function integer transformOnError(string errorMessage, string stackTrace, integer idx) {
+// }
+
+// Called after transform(count-1) to return the resources that have been used to their initial state
+// so that next input record may be parsed.
+// function void clean() {}
+
+// Called during each graph run after the entire transform was executed. Should be used to free any resources
+// allocated within the preExecute() method.
+// function void postExecute() {}
+
+// Called to return a user-defined error message when an error occurs.
+// function string getMessage() {}
+]]></attr>
+</Node>
+<Edge fromNode="DATA_GENERATOR0:0" guiBendpoints="" guiRouter="Manhattan" id="Edge12" inPort="Port 0 (in)" metadata="Metadata8" outPort="Port 0 (out)" toNode="RESETING_LOOKUP_VALUES:0"/>
+<Edge debugMode="true" fromNode="RESETING_LOOKUP_VALUES:0" guiBendpoints="" guiRouter="Manhattan" id="Edge13" inPort="Port 0 (in)" metadata="Metadata2" outPort="Port 0 (out)" toNode="LOOKUP_TABLE_READER_WRITER2:0"/>
+</Phase>
+<Phase number="4">
+<Node enabled="enabled" guiHeight="73" guiName="CLEAN UP" guiWidth="128" guiX="31" guiY="803" id="CLEAN_UP" recordsNumber="1" type="DATA_GENERATOR">
+<attr name="generate"><![CDATA[//#CTL2
+
+// Generates output record.
+function integer generate() {
+	string files = lookup(gdLookup0).get("FILES_TO_DELETE").value;
+	$out.0.files = files;
+	return ALL;
+}
+
+// Called during component initialization.
+// function boolean init() {}
+
+// Called during each graph run before the transform is executed. May be used to allocate and initialize resources
+// required by the generate. All resources allocated within this method should be released
+// by the postExecute() method.
+// function void preExecute() {}
+
+// Called only if generate() throws an exception.
+// function integer generateOnError(string errorMessage, string stackTrace) {
+// }
+
+// Called during each graph run after the entire transform was executed. Should be used to free any resources
+// allocated within the preExecute() method.
+// function void postExecute() {}
+
+// Called to return a user-defined error message when an error occurs.
+// function string getMessage() {}
+]]></attr>
+</Node>
+<Node baseURL="${PATH}/" enabled="enabled" guiHeight="73" guiName="File Copy/Move" guiWidth="139" guiX="568" guiY="803" id="FILE_COPY_MOVE0" makeDirs="true" sourcePath="${file}" targetPath="${LOADED_PATH}" type="FILE_COPY_MOVE"/>
+<Node enabled="enabled" guiHeight="73" guiName="Moving all loaded files" guiWidth="192" guiX="313" guiY="803" id="MOVING_ALL_LOADED_FILES" type="NORMALIZER">
+<attr name="normalize"><![CDATA[//#CTL2
+// This transformation defines the way in which a single input record is normalized
+// into multiple output records.
+string[] files;
+// This function is called for all input records.
+// It parses each single input record and returns the number of records
+// that should be created from such input record.
+function integer count() {
+	files = split($in.0.files,";");
+	return files.length();
+}
+
+// This function creates new records for the output, based on single input record
+// that has been parsed by the count() function.
+// It is called count() times for each input record.
+// The idx argument specifies which output record is being created,
+// its values range is from 0 to count() - 1.
+function integer transform(integer idx) {
+	
+	$out.0.file = "${SOURCE_PATH}/" + files[idx];
+	return OK;
+}
+
+// Called during component initialization.
+// function boolean init() {}
+
+// Called during each graph run before the transform is executed. May be used to allocate and initialize resources
+// required by the transform. All resources allocated within this method should be released
+// by the postExecute() method.
+// function void preExecute() {}
+
+// Called only if count() throws an exception.
+// function integer countOnError(string errorMessage, string stackTrace) {
+//}
+
+// Called only if transform() throws an exception.
+// function integer transformOnError(string errorMessage, string stackTrace, integer idx) {
+// }
+
+// Called after transform(count-1) to return the resources that have been used to their initial state
+// so that next input record may be parsed.
+// function void clean() {}
+
+// Called during each graph run after the entire transform was executed. Should be used to free any resources
+// allocated within the preExecute() method.
+// function void postExecute() {}
+
+// Called to return a user-defined error message when an error occurs.
+// function string getMessage() {}
+]]></attr>
+</Node>
+<Edge debugMode="true" fromNode="CLEAN_UP:0" guiBendpoints="" guiRouter="Manhattan" id="Edge10" inPort="Port 0 (in)" metadata="Metadata6" outPort="Port 0 (out)" toNode="MOVING_ALL_LOADED_FILES:0"/>
+<Edge debugMode="true" fromNode="MOVING_ALL_LOADED_FILES:0" guiBendpoints="" guiRouter="Manhattan" id="Edge11" inPort="Port 0 (Base URL, Source and Target Path, that deﬁne what should be copied or deleted.)" metadata="Metadata3" outPort="Port 0 (out)" toNode="FILE_COPY_MOVE0:0"/>
+</Phase>
+</Graph>
