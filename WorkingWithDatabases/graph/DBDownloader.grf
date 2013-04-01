@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="jancisar" created="Mon Apr 01 10:41:36 CEST 2013" guiVersion="3.3.2" id="1364805859317" licenseType="Commercial" modified="Mon Apr 01 18:18:51 CEST 2013" modifiedBy="jancisar" name="DBDownloader" revision="1.3" showComponentDetails="true">
+<Global>
+<Metadata id="Metadata0">
+<Record fieldDelimiter=";" name="test" recordDelimiter="\n" recordSize="-1" type="delimited">
+<Field eofAsDelimiter="false" name="id" nullable="true" shift="0" size="11" type="integer"/>
+<Field eofAsDelimiter="false" name="text" nullable="true" shift="0" size="255" type="string"/>
+</Record>
+</Metadata>
+<Connection database="MYSQL" dbURL="jdbc:mysql://localhost:3306/test" id="JDBC0" jdbcSpecific="MYSQL" name="TestConnection" type="JDBC" user="root"/>
+<Property fileURL="workspace.prm" id="GraphParameter0"/>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node dbConnection="JDBC0" enabled="enabled" guiHeight="65" guiName="DBExecute" guiWidth="128" guiX="48" guiY="27" id="DB_EXECUTE0" type="DB_EXECUTE">
+<attr name="sqlQuery"><![CDATA[CREATE TABLE IF NOT EXISTS `test` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `text` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;]]></attr>
+</Node>
+</Phase>
+<Phase number="1">
+<Node dbConnection="JDBC0" enabled="enabled" guiHeight="65" guiName="DBInputTable" guiWidth="128" guiX="48" guiY="115" id="DB_INPUT_TABLE0" type="DB_INPUT_TABLE">
+<attr name="sqlQuery"><![CDATA[select * from \`test\`.\`test\`]]></attr>
+</Node>
+<Node enabled="enabled" guiHeight="65" guiName="Trash" guiWidth="128" guiX="291" guiY="115" id="TRASH0" type="TRASH"/>
+<Edge fromNode="DB_INPUT_TABLE0:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (out)" toNode="TRASH0:0"/>
+</Phase>
+</Graph>
